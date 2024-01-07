@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./src",
+        "paths": {
+            "@/*": [
+                "*"
+            ]
+        },
+        "target": "esnext",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true
+    },
+    "include": [
+        "src/**/*.js",
+        "src/**/*.jsx",
+        "src/stores/index.ts",
+        "src/utils/cardUtil.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

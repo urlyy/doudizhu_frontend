@@ -6,8 +6,8 @@ const api = {
         const resp = await request.get("/room/play", params);
         return resp.data;
     },
-    createAIRoom: async () => {
-        const resp = await request.postParam("/room/play")
+    createAIRoom: async (params) => {
+        const resp = await request.get("/room/play/ai", params)
         return resp.data;
     }
 }

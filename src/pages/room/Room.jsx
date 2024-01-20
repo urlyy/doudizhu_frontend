@@ -15,8 +15,7 @@ import api from './api'
 import Modal from '../../components/Modal';
 
 //我这块区域
-const Mine = ({ data, step, emit, lastCards, curPlayerIdx, countdownActive }) => {
-
+const Mine = ({ data, step, emit, lastCardsPlayerIdx, lastCards, curPlayerIdx, countdownActive }) => {
     const { username, coin, rank } = userStore();
     const [selectedCardIdxs, setSelectedCardIdxs] = useState([]);
     const [hint, setHint] = useState(null);
@@ -27,12 +26,15 @@ const Mine = ({ data, step, emit, lastCards, curPlayerIdx, countdownActive }) =>
     //     setSelectedCardIdxs(test())
     // }, [data])
     useEffect(() => {
-        if (data != undefined && curPlayerIdx == data.idx) {
-            if (lastCards.length != 0) {
-                const res = cardHelper.findBiggerCards(data.cards, lastCards);
-                setHint(res);
-            } else {
-                setHint(null);
+        if (data != undefined) {
+            // console.log("mine", curPlayerIdx, data.idx);
+            if (curPlayerIdx == data.idx) {
+                if (lastCards.length != 0) {
+                    const res = cardHelper.findBiggerCards(data.cards, lastCards);
+                    setHint(res);
+                } else {
+                    setHint(null);
+                }
             }
         }
     }, [curPlayerIdx])
@@ -128,7 +130,7 @@ const Mine = ({ data, step, emit, lastCards, curPlayerIdx, countdownActive }) =>
     }
     return (
         <>
-            {(curPlayerIdx + 2) % 3 == data.idx && drawLastCards(lastCards)}
+            {(lastCardsPlayerIdx == data.idx) && drawLastCards(lastCards)}
             <div className='absolute w-full bottom-3 flex flex-col'>
                 <div className='w-36 h-36 absolute bottom-48' style={{ userSelect: "none" }}>
                     <img src={data.is_dizhu ? dizhu : nongming}></img>
@@ -179,13 +181,31 @@ const Mine = ({ data, step, emit, lastCards, curPlayerIdx, countdownActive }) =>
     )
 }
 //左边这个人的
-const Lefter = ({ data, step, curPlayerIdx, lastCards, countdownActive }) => {
+const Lefter = ({ data, step, emit, curPlayerIdx, lastCardsPlayerIdx, lastCards, countdownActive }) => {
     const [lefter, setLefter] = useState({});
     useEffect(() => {
-        api.getUserProfile(data.user_id).then(data => {
-            setLefter(data.user)
-        })
+        if (data.is_ai == true) {
+            setLefter({
+                id: null,
+                username: "人机",
+                coin: 0,
+                rank: "0",
+                avatar: ""
+            })
+        } else {
+            api.getUserProfile(data.user_id).then(data => {
+                setLefter(data.user)
+            })
+        }
     }, [])
+    useEffect(() => {
+        if (data != undefined) {
+            // console.log("left", curPlayerIdx, data.idx);
+            if (data.idx == curPlayerIdx) {
+                emit('ai_play_cards', { idx: data.idx })
+            }
+        }
+    }, [curPlayerIdx])
     return (
         <div className='flex'>
             <div className='flex items-start'>
@@ -207,7 +227,7 @@ const Lefter = ({ data, step, curPlayerIdx, lastCards, countdownActive }) => {
                             {data.is_ready ? '已准备' : '未准备'}
                         </div>
                     }
-                    {step == 2 && (curPlayerIdx + 2) % 3 == data.idx &&
+                    {step == 2 && (lastCardsPlayerIdx == data.idx) &&
                         <div className='flex items-center w-40 h-52 ml-3'>
                             <div className='flex'>
                                 {lastCards.map((card, index) => {
@@ -228,13 +248,32 @@ const Lefter = ({ data, step, curPlayerIdx, lastCards, countdownActive }) => {
     )
 }
 //右边这个人的 
-const Righter = ({ data, step, curPlayerIdx, lastCards, countdownActive }) => {
+const Righter = ({ data, step, emit, curPlayerIdx, lastCards, lastCardsPlayerIdx, countdownActive }) => {
     const [righter, setRighter] = useState({})
     useEffect(() => {
-        api.getUserProfile(data.user_id).then(data => {
-            setRighter(data.user)
-        })
+        if (data.is_ai == true) {
+            setRighter({
+                id: null,
+                username: "人机",
+                coin: 0,
+                rank: "0",
+                avatar: ""
+            })
+        } else {
+            api.getUserProfile(data.user_id).then(data => {
+                setRighter(data.user)
+            })
+        }
+
     }, [])
+    useEffect(() => {
+        if (data != undefined) {
+            // console.log("right", curPlayerIdx, data.idx);
+            if (curPlayerIdx == data.idx) {
+                emit('ai_play_cards', { idx: data.idx })
+            }
+        }
+    }, [curPlayerIdx])
     return (
         <div className='flex flex-row-reverse'>
             <div className='flex flex-col'>
@@ -244,7 +283,7 @@ const Righter = ({ data, step, curPlayerIdx, lastCards, countdownActive }) => {
                         {step == 0 && <div style={{ writingMode: "vertical-lr" }} className={`${data.is_ready ? 'bg-green-300' : 'bg-red-300'}  text-2xl  rounded-md p-2`}>
                             {data.is_ready ? '已准备' : '未准备'}
                         </div>}
-                        {step == 2 && (curPlayerIdx + 2) % 3 == data.idx &&
+                        {step == 2 && (lastCardsPlayerIdx == data.idx) &&
                             <div className='flex items-center w-40 h-52 justify-end'>
                                 <div className='flex'>
                                     {lastCards.map((card, index) => {
@@ -340,8 +379,8 @@ function Room() {
     const [showSettlement, setShowSettlement] = useState(false);
     const [settlementData, setSettlementData] = useState([]);
     const isReadingSettlement = useRef(false);
-    // const [searchParams] = useSearchParams();
-    // const isAI = searchParams.get('ai');
+    const [searchParams] = useSearchParams();
+    const isAI = searchParams.get('ai');
     // const { id: roomId } = useParams();
     const emit = (path, data = {}, callback = null) => {
         if (callback == null) {
@@ -355,11 +394,11 @@ function Room() {
         }
     }
     const leftData = () => {
-        const leftIdx = (myIdx.current - 1 + 3) % 3
+        const leftIdx = (myIdx.current + 1) % 3
         return roomData.players[leftIdx]
     }
     const rightData = () => {
-        const rightIdx = (myIdx.current + 1) % 3
+        const rightIdx = (myIdx.current + 2) % 3
         return roomData.players[rightIdx]
     }
     const handleRefresh = (data) => {
@@ -380,10 +419,16 @@ function Room() {
         })
     }
     async function handleSettlementClose() {
-        const room_data = await api.getRoomData(roomData.id)
-        setRoomData(room_data);
-        setShowSettlement(false);
-        isReadingSettlement.current = false;
+        console.log("isAI", isAI)
+        if (isAI == 'true') {
+            console.log("jinlai1")
+            navigate('/main');
+        } else {
+            const room_data = await api.getRoomData(roomData.id);
+            setRoomData(room_data);
+            setShowSettlement(false);
+            isReadingSettlement.current = false;
+        }
     }
     useEffect(() => {
         // 在组件挂载时建立Socket.IO连接
@@ -403,12 +448,13 @@ function Room() {
         return () => {
             socket.off('connect');
             socket.off('refresh');
-            socket.off('settlement')
+            socket.off('settlement');
             socket.disconnect();
             socket.off('disconnect');
         };
     }, []);
     //全局的时间倒计时
+    // console.log(roomData)
     return (
         <>
             {showSettlement && <Modal isOpen={true}>
@@ -425,19 +471,16 @@ function Room() {
                     <DizhuCard data={roomData.dizhu_cards}></DizhuCard>
                     <div className='flex'>
                         <div className='flex-1'>
-                            {Object.keys(leftData()).length > 0 && <Lefter countdownActive={!showSettlement} lastCards={roomData.last_cards} curPlayerIdx={roomData.cur_player_idx} step={roomData.status} data={leftData()}></Lefter>}
+                            {Object.keys(leftData()).length > 0 && <Lefter emit={emit} countdownActive={!showSettlement} lastCardsPlayerIdx={roomData.last_cards_player_idx} lastCards={roomData.last_cards} curPlayerIdx={roomData.cur_player_idx} step={roomData.status} data={leftData()}></Lefter>}
                         </div>
                         <div className='flex-1'>
-                            {Object.keys(rightData()).length > 0 && <Righter countdownActive={!showSettlement} lastCards={roomData.last_cards} curPlayerIdx={roomData.cur_player_idx} step={roomData.status} data={rightData()}></Righter>}
+                            {Object.keys(rightData()).length > 0 && <Righter emit={emit} countdownActive={!showSettlement} lastCardsPlayerIdx={roomData.last_cards_player_idx} lastCards={roomData.last_cards} curPlayerIdx={roomData.cur_player_idx} step={roomData.status} data={rightData()}></Righter>}
                         </div>
                     </div>
-                    <Mine countdownActive={!showSettlement} lastCards={roomData.last_cards} curPlayerIdx={roomData.cur_player_idx} emit={emit} step={roomData.status} data={roomData.players[myIdx.current]}></Mine>
+                    <Mine countdownActive={!showSettlement} lastCardsPlayerIdx={roomData.last_cards_player_idx} lastCards={roomData.last_cards} curPlayerIdx={roomData.cur_player_idx} emit={emit} step={roomData.status} data={roomData.players[myIdx.current]}></Mine>
                 </div>
             </div>
         </>
-
     )
 }
-
 export default Room;
-

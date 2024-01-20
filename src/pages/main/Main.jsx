@@ -50,8 +50,8 @@ const Main = () => {
         setIsLoading(true);
         let roomID = null;
         if (ai == true) {
-            const data = await api.createAIRoom();
-            if (data.success == true) { navigate(`/room/${roomID}?ai=${ai}`); }
+            const data = await api.createAIRoom({ rank: rank });
+            if (data.success == true) { navigate(`/room?ai=${ai}`); }
         } else {
             const searchRoom = async () => {
                 const data = await api.searchRoom({ rank: rank, level: matchLevel.current });

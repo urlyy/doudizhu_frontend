@@ -6,7 +6,7 @@ import Entrance from './pages/entrance/Entrance'
 import Main from './pages/main/Main'
 import Room from './pages/room/Room'
 import userStore from './stores/user'
-// import Chat from "./components/chat/index";
+import Chat from "./components/chat/index";
 import NotFound from './pages/notFound/Page'
 import Shop from './pages/shop/Shop'
 import AdminMain from './pages/admin/Page'
@@ -32,7 +32,7 @@ const App = () => {
         {routes}
         {/* token != null &&  */}
       </div>
-      {/* <Chat></Chat> */}
+      <Chat></Chat>
       {/* <WS></WS> */}
     </>
   )

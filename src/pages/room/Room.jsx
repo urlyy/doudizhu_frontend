@@ -431,9 +431,11 @@ function Room() {
         }
     }
     useEffect(() => {
+        console.log("进来了");
         // 在组件挂载时建立Socket.IO连接
         socket.connect();
         socket.on('connect', () => {
+            console.log("建立连接")
             emit('player_enter');
         });
         socket.on('disconnect', () => {

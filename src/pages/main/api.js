@@ -9,7 +9,11 @@ const api = {
     createAIRoom: async (params) => {
         const resp = await request.get("/room/play/ai", params)
         return resp.data;
-    }
+    },
+    searchRoomById: async (roomId, params) => {
+        const resp = await request.get(`/room/play/${roomId}`, params);
+        return resp.data;
+    },
 }
 
 export default api;

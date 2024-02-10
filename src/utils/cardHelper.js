@@ -109,7 +109,10 @@ class Type {
         return true
     }
     biggerThan(a, b) {
-        return
+        return true;
+    }
+    sameType(cardsA, cardsB) {
+        return true;
     }
 }
 
@@ -130,6 +133,14 @@ class 火箭 extends Type {
     biggerThan(a, b) {
         return true;
     }
+    sameType(cardsA, cardsB) {
+        const res1 = this.isMyType(cardsA) && this.isMyType(cardsB);
+        if (res1 == true) {
+            return cardsA.length == cardsB.length;
+        } else {
+            return false;
+        }
+    }
 }
 
 class 炸弹 extends Type {
@@ -139,6 +150,9 @@ class 炸弹 extends Type {
     }
     biggerThan(a, b) {
         return maxNumber(a) > maxNumber(b);
+    }
+    sameType(cardsA, cardsB) {
+        return this.isMyType(cardsA) && this.isMyType(cardsB);
     }
 }
 
@@ -166,6 +180,9 @@ class 四带两对 extends Type {
         const [fourb, otherb] = 拆出四(b);
         return maxNumber(foura) > maxNumber(fourb);
     }
+    sameType(cardsA, cardsB) {
+        return this.isMyType(cardsA) && this.isMyType(cardsB);
+    }
 }
 
 class 四带两张 extends Type {
@@ -184,6 +201,14 @@ class 四带两张 extends Type {
         const [foura, othera] = 拆出四(a);
         const [fourb, otherb] = 拆出四(b);
         return maxNumber(foura) > maxNumber(fourb);
+    }
+    sameType(cardsA, cardsB) {
+        const res1 = this.isMyType(cardsA) && this.isMyType(cardsB);
+        if (res1 == true) {
+            return cardsA.length == cardsB.length;
+        } else {
+            return false;
+        }
     }
 }
 
@@ -211,6 +236,14 @@ class 飞机带多对 extends Type {
         const [threeb, otherb] = 拆出三顺(b);
         return maxNumber(threea) > maxNumber(threeb)
     }
+    sameType(cardsA, cardsB) {
+        const res1 = this.isMyType(cardsA) && this.isMyType(cardsB);
+        if (res1 == true) {
+            return cardsA.length == cardsB.length;
+        } else {
+            return false;
+        }
+    }
 }
 
 class 飞机带多单 extends Type {
@@ -228,6 +261,14 @@ class 飞机带多单 extends Type {
         const [threeb, otherb] = 拆出三顺(b);
         return maxNumber(threea) > maxNumber(threeb)
     }
+    sameType(cardsA, cardsB) {
+        const res1 = this.isMyType(cardsA) && this.isMyType(cardsB);
+        if (res1 == true) {
+            return cardsA.length == cardsB.length;
+        } else {
+            return false;
+        }
+    }
 }
 
 class 三顺 extends Type {
@@ -240,6 +281,14 @@ class 三顺 extends Type {
     }
     biggerThan(a, b) {
         return maxNumber(a) > maxNumber(b)
+    }
+    sameType(cardsA, cardsB) {
+        const res1 = this.isMyType(cardsA) && this.isMyType(cardsB);
+        if (res1 == true) {
+            return cardsA.length == cardsB.length;
+        } else {
+            return false;
+        }
     }
 }
 
@@ -254,6 +303,14 @@ class 对顺 extends Type {
     biggerThan(a, b) {
         return maxNumber(a) > maxNumber(b)
     }
+    sameType(cardsA, cardsB) {
+        const res1 = this.isMyType(cardsA) && this.isMyType(cardsB);
+        if (res1 == true) {
+            return cardsA.length == cardsB.length;
+        } else {
+            return false;
+        }
+    }
 }
 
 class 单顺 extends Type {
@@ -266,6 +323,14 @@ class 单顺 extends Type {
     }
     biggerThan(cardsa, cardsb) {
         return maxNumber(cardsa) > maxNumber(cardsb);
+    }
+    sameType(cardsA, cardsB) {
+        const res1 = this.isMyType(cardsA) && this.isMyType(cardsB);
+        if (res1 == true) {
+            return cardsA.length == cardsB.length;
+        } else {
+            return false;
+        }
     }
 }
 
@@ -285,6 +350,9 @@ class 三带一对 extends Type {
         const sortedCardsB = sortByCnt(b);
         return str2number[sortedCardsA[0][0]] > str2number[sortedCardsB[0][0]]
     }
+    sameType(cardsA, cardsB) {
+        return this.isMyType(cardsA) && this.isMyType(cardsB);
+    }
 }
 
 class 三带一张 extends Type {
@@ -301,6 +369,9 @@ class 三带一张 extends Type {
         const sortedCardsB = sortByCnt(b);
         return str2number[sortedCardsA[0][0]] > str2number[sortedCardsB[0][0]]
     }
+    sameType(cardsA, cardsB) {
+        return this.isMyType(cardsA) && this.isMyType(cardsB);
+    }
 }
 
 class 三张 extends Type {
@@ -310,6 +381,9 @@ class 三张 extends Type {
     }
     biggerThan(a, b) {
         return str2number[a[0].number] > str2number[b[0].number]
+    }
+    sameType(cardsA, cardsB) {
+        return this.isMyType(cardsA) && this.isMyType(cardsB);
     }
 }
 
@@ -321,6 +395,9 @@ class 一对 extends Type {
     biggerThan(a, b) {
         return str2number[a[0].number] > str2number[b[0].number]
     }
+    sameType(cardsA, cardsB) {
+        return this.isMyType(cardsA) && this.isMyType(cardsB);
+    }
 }
 
 class 一张 extends Type {
@@ -330,6 +407,9 @@ class 一张 extends Type {
     }
     biggerThan(cardsA, cardsB) {
         return str2number[cardsA[0].number] > str2number[cardsB[0].number];
+    }
+    sameType(cardsA, cardsB) {
+        return this.isMyType(cardsA) && this.isMyType(cardsB);
     }
 }
 
@@ -405,7 +485,7 @@ const findBiggerCards = (cardsA, cardsB) => {
             //左闭右开
             const subCards = cardsA.slice(i, j + 1);
             const typeSubA = getType(subCards);
-            if (typeSubA != null && typeSubA == typeB) {
+            if (typeSubA != null && typeSubA == typeB && typeSubA.sameType(subCards, cardsB)) {
                 if (isBiggerThan(subCards, cardsB)) {
                     return [i, j]
                 }

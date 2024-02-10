@@ -97,19 +97,26 @@ const ChatArea = ({ isOpen, onClose, onSend }) => {
     }
     return (
         <div id="drawer" className={`${isOpen ? "translate-x-0" : "-translate-x-full"} w-2/5 opacity-95 transition-transform duration-500 ease-in-out flex flex-col p-3 fixed top-0 h-full bg-white shadow-lg `}>
-            <button onClick={onClose} className="text-3xl ml-auto">&times;</button>
-            <div ref={scrollDivRef} className="flex flex-col gap-3 p-3 overflow-y-scroll h-full overflow-x-hidden max-w-300px">
-                {msgs.map((datum, idx) => {
-                    const isMe = myId == datum.userId;
-                    // console.log(datum)
-                    return <ChatItem key={idx} isMe={isMe} data={datum}></ChatItem>
-                })}
+            <div className="relative h-full flex flex-col">
+                <div>
+                    <button onClick={onClose} className="text-3xl absolute right-0">&times;</button>
+                    <div className="text-center text-3xl">聊天大厅</div>
+                </div>
+
+                <div ref={scrollDivRef} className="flex flex-col gap-3 p-3 overflow-y-scroll flex-1 overflow-x-hidden max-w-300px">
+                    {msgs.map((datum, idx) => {
+                        const isMe = myId == datum.userId;
+                        // console.log(datum)
+                        return <ChatItem key={idx} isMe={isMe} data={datum}></ChatItem>
+                    })}
+                </div>
+
+                <div className="w-full flex gap-3">
+                    <input value={text} className="w-4/5" onChange={(e) => setText(e.target.value)} placeholder="输入内容"></input>
+                    <button onClick={handleSend} className="w-1/5 border">发送</button>
+                </div>
             </div>
-            {/* 发送区域 */}
-            <div className="w-full flex gap-3">
-                <input value={text} className="w-4/5" onChange={(e) => setText(e.target.value)} placeholder="输入内容"></input>
-                <button onClick={handleSend} className="w-1/5 border">发送</button>
-            </div>
+
         </div >
     )
 }
@@ -140,6 +147,7 @@ const Chat = () => {
 
     return (
         <>
+
             {!isOpenChat && <ChatButton onClick={onOpen}></ChatButton>}
             <ChatArea isOpen={isOpenChat} onClose={onClose}></ChatArea >
         </>

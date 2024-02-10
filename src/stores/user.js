@@ -13,9 +13,17 @@ const userStore = create(set => ({
     rank: user ? user.rank : null,
     cardBack: user ? user.username : null,
     tablecloth: user ? user.username : null,
-    // logout: () => set(state => ({
-    //     token: null
-    // })),
+    avatar: user ? user.avatar : null,
+    logout: () => set(state => ({
+        id: null,
+        coin: null,
+        username: null,
+        rank: null,
+        tablecloth: null,
+        cardBack: null,
+        token: null,
+        avatar: null,
+    })),
     setUser: (user) => set(state => ({
         id: user.id,
         coin: user.coin,
@@ -24,6 +32,11 @@ const userStore = create(set => ({
         tablecloth: user.tablecloth,
         cardBack: user.cardBack,
         token: user.token,
+        avatar: user.avatar,
+    })),
+    setAvatar: (avatar) => set(state => ({
+        ...state,
+        avatar: avatar,
     }))
 }))
 

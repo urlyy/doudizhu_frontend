@@ -3,7 +3,7 @@ let findAndCheck = {
     noRepeat: function (arr) {
         let newArr = [];
         for (i = 0; i < arr.length; i++) {
-            if (newArr.indexOf(arr[i]) === -1) {
+            if (newArr.indexOf(arr[i]) == -1) {
                 newArr.push(arr[i]);
             }
         }
@@ -15,7 +15,7 @@ let findAndCheck = {
         let newArr = [];
         let arr2 = [];
         arr.forEach(val => {
-            if (baseNum - val === n) {//判断是否属于连续的数
+            if (baseNum - val == n) {//判断是否属于连续的数
                 newArr.push(val);
                 n++;
             } else {
@@ -58,7 +58,7 @@ function checkShunZi(paiZu, num) { //顺子情况 5-11  查找时可能 数组�
     fitArr = newArr[0];
     unRule = newArr[1];
     let amountArr = newArr[2];
-    if (fitArr.length === paiZu.length && fitArr.length >= 5) {
+    if (fitArr.length == paiZu.length && fitArr.length >= 5) {
         isShunzi = true;
     }
     if (num) { return [fitArr, unRule, amountArr] };
@@ -76,7 +76,7 @@ function checkLianDui(paiZu, num) { //连对情况 6-20  3 - 12 4-13 查找时�
     let unRule = [];
     let isLianDui = false;
     paiZu.map((val, idx) => {
-        if (val === paiZu[idx + 1]) {
+        if (val == paiZu[idx + 1]) {
             fitArr = fitArr.concat(paiZu.slice(idx, (idx + 1)));
         }
     });
@@ -84,7 +84,7 @@ function checkLianDui(paiZu, num) { //连对情况 6-20  3 - 12 4-13 查找时�
     fitArr = newArr[0];
     unRule = newArr[1];
     let amountArr = newArr[2];
-    if (fitArr.length === paiZu.length && fitArr.length >= 6 || fitArr.length === 2) { isLianDui = true; };
+    if (fitArr.length == paiZu.length && fitArr.length >= 6 || fitArr.length == 2) { isLianDui = true; };
     if (num) { return [fitArr, unRule, amountArr] };
     return [isLianDui, 2, fitArr, unRule];
 }
@@ -99,7 +99,7 @@ function checkFeiJI(paiZu, num) {  //查找时可能 数组中可能存在两个
     let p = [...paiZu];
     let unRule = [];//存放不符合规则的元素
     p.map((val, idx) => {
-        if (p[idx] === p[idx + 2]) {
+        if (p[idx] == p[idx + 2]) {
             fitArr = fitArr.concat(p.slice(idx, idx + 3));
         }
     });
@@ -110,31 +110,31 @@ function checkFeiJI(paiZu, num) {  //查找时可能 数组中可能存在两个
     if (fitArr.length > 0 && fitArr.length < p.length) {//证明飞机有带 带单张 或者 对子 
         let duiZiNum = 0;//对子的个数
         let daiNum = fitArr.length / 3; //要带牌的个数
-        if (daiNum === unRule.length) {
+        if (daiNum == unRule.length) {
             console.log("它是飞机带了个" + daiNum + "个", fitArr.join("") + unRule.join(""));
             isFeiJi = true;
-        } else if (daiNum === (unRule.length / 2)) {
+        } else if (daiNum == (unRule.length / 2)) {
             //判断带的牌是否为对子
             let n = 0;
             let m = 1;
             unRule.map((val, idx) => {
                 //12 34 56相等
-                if (unRule[idx + n] && unRule[idx + n] === unRule[idx + m]) {
+                if (unRule[idx + n] && unRule[idx + n] == unRule[idx + m]) {
                     duiZiNum++;
                     n++;
                     m++;
                 }
             })
-            if (duiZiNum === daiNum) {
+            if (duiZiNum == daiNum) {
                 console.log(`它是飞机带了` + duiZiNum + "对", fitArr.join("") + unRule.join(""));
                 isFeiJi = true;
             }
-        } else if ((unRule.length + 3) === (daiNum - 1)) {
+        } else if ((unRule.length + 3) == (daiNum - 1)) {
             unRule = unRule.concat(fitArr.splice(-3, 4));
             console.log("它是飞机带了", fitArr.join("") + unRule.join(""));
             isFeiJi = true;
         }
-    } else if (fitArr.length === p.length) {
+    } else if (fitArr.length == p.length) {
         console.log(`它是飞机没带`, fitArr.join("") + unRule.join(""));
         isFeiJi = true;
     } else {
@@ -158,7 +158,7 @@ function checkZhaDan(paiZu, num) { //个数 大于3 小于9
             wangZha = [val, p[idx + 1]];
             console.log("王炸");
         }
-        if (val === p[idx + 3]) { //找到符合条件的元素
+        if (val == p[idx + 3]) { //找到符合条件的元素
             fitArr = fitArr.concat(p.slice(idx, (idx + 4)));
         }
     });
@@ -176,21 +176,21 @@ function checkZhaDan(paiZu, num) { //个数 大于3 小于9
         return [fitArr, unRule, amountArr];
     }
     //判断出牌类型
-    if (fitArr.length === 4 || fitArr.length === 2) {
-        if (fitArr.length === 2) {
+    if (fitArr.length == 4 || fitArr.length == 2) {
+        if (fitArr.length == 2) {
             console.log("它是王炸", p.join(""));
             isZhaDan = true;
-        } else if (fitArr.length === 4 && unRule.length === 0) {
+        } else if (fitArr.length == 4 && unRule.length == 0) {
             console.log("它是炸弹", fitArr.join(""));
             isZhaDan = true;
-        } else if (unRule.length === 2) {
+        } else if (unRule.length == 2) {
             console.log("它是四带二", p.join(""));
             isZhaDan = true;
-        } else if (unRule[0] === unRule[1] && unRule[2] === unRule[3]) {//判断对子情况
+        } else if (unRule[0] == unRule[1] && unRule[2] == unRule[3]) {//判断对子情况
             console.log("它是四带两对", p.join(""));
             isZhaDan = true;
         }
-    } else if (fitArr.length === 8) { //带炸弹
+    } else if (fitArr.length == 8) { //带炸弹
         console.log("它是四带两对", p.join(""))
         isZhaDan = true;
     } else {
@@ -212,7 +212,7 @@ let rules = [checkZhaDan, checkFeiJI, checkLianDui, checkShunZi]; //将牌的规
 function checkPai(paiZu, isOk) {
     // if(!isOk){return}; //用于判断是否到你出牌了
     let result = [];
-    if (paiZu.length === 1) { return [true, [paiZu[0]], []]; };//单张
+    if (paiZu.length == 1) { return [true, [paiZu[0]], []]; };//单张
     let res = rules.some((val, idx) => {
         result = val(paiZu);
         return result[0];
@@ -274,7 +274,7 @@ function findPai(nowPaiZu, lastPaiZu) { //nowPaiZu:本家牌组 lastPaiZu:上一
             if ((res[0].length + surplusArr.length) < lastPaiZu.length) { return; } //牌组不够长
             let daiNum = 0; //要带牌的个数
             let len = paiType[3].length;
-            if (paiType[1] === 3) { //飞机  如果单张或对子不够的处理没做 
+            if (paiType[1] == 3) { //飞机  如果单张或对子不够的处理没做 
                 daiNum = paiType[2].length / 3; //要带牌的个数
                 if (daiNum !== len) { //对子
                     let duiArr = checkLianDui(surplusArr, 1);
@@ -282,7 +282,7 @@ function findPai(nowPaiZu, lastPaiZu) { //nowPaiZu:本家牌组 lastPaiZu:上一
                     let danArr = checkDanZhang(surplusArr);
                 }
             } else {//炸弹
-                if (paiType[2].length === len) { //四带两对
+                if (paiType[2].length == len) { //四带两对
                     let duiArr = checkLianDui(surplusArr, 1);
                 } else {
                     let danArr = checkDanZhang(surplusArr);

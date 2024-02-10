@@ -16,8 +16,7 @@ import Test from './pages/test/Page'
 
 const App = () => {
   const routes = useRoutes([
-    { path: "/", element: <Entrance></Entrance> },
-    { path: "/main", element: <Main></Main> },
+    { path: "/", element: <Main></Main> },
     { path: "/room", element: <Room></Room> },
     { path: "/shop", element: <Shop></Shop> },
     { path: "/admin", element: <AdminMain></AdminMain> },
@@ -26,16 +25,23 @@ const App = () => {
     { path: '*', element: <NotFound /> },
   ])
   const { token } = userStore();
-  return (
-    <>
-      <div>
-        {routes}
-        {/* token != null &&  */}
-      </div>
-      <Chat></Chat>
-      {/* <WS></WS> */}
-    </>
-  )
+  if (token == null) {
+    return (
+      <Entrance></Entrance>
+    )
+  } else {
+    return (
+      <>
+        <div>
+          {routes}
+          {/* token != null &&  */}
+        </div>
+        <Chat></Chat>
+        {/* <WS></WS> */}
+      </>
+    )
+  }
+
 };
 
 export default App;

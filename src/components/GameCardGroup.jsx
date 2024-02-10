@@ -4,7 +4,7 @@ const GameCardGroup = ({ cards, className, forMe }) => {
     const [selectedCards, setSelectedCards] = useState([]);
     const onClick = (index) => {
         const indexToRemove = selectedCards.indexOf(index);
-        if (indexToRemove !== -1) {
+        if (indexToRemove != -1) {
             selectedCards.splice(indexToRemove, 1);
         } else {
             selectedCards.push(index);

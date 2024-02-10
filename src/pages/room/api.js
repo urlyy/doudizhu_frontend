@@ -8,7 +8,8 @@ const api = {
     getRoomData: async (roomID) => {
         const resp = await request.get(`/room/${roomID}`);
         return resp.data.data.room_data;
-    }
+    },
+
 }
 
 export default api;

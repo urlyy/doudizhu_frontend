@@ -30,7 +30,7 @@ const GoodsGrid = ({ onSelect }) => {
     const filteredGoods = () => {
         return goods.filter(item => {
             if (filterType == "0") { return true; }
-            return item.type === filterType;
+            return item.type == filterType;
         }).filter(item => {
             return item.desc.includes(filterName) || item.name.includes(filterName);
         });

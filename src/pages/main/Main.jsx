@@ -7,7 +7,7 @@ import Modal from '../../components/Modal'
 import score2rank from '../../utils/rankScore2title';
 import api from './api'
 import { useState, useRef } from 'react';
-import ProfileModal from '../../components/ProfileModal'
+import ProfileModal from '../../components/profileModal/ProfileModal'
 
 
 const Button = ({ onClick, children }) => {

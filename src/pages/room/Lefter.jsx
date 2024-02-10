@@ -36,7 +36,7 @@ const Lefter = ({ curTermBeginTime, onShowProfile, data, step, emit, curPlayerId
                         } else if (step == 2) {
                             emit('ai_play_cards', { idx: data.idx })
                         }
-                    }, 1000)
+                    }, 3000)
                 }
             }
 

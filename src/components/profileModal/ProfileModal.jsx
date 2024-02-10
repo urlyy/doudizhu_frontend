@@ -1,8 +1,8 @@
-import userStore from "../stores/user";
-import Modal from "./Modal";
+import userStore from "../../stores/user";
+import Modal from "../Modal";
 import { useState, useEffect } from "react";
-import api from '../pages/main/api'
-
+import api from "./api";
+import dateFormat from "../../utils/dateFormat";
 const RecordsTable = ({ records }) => {
     return (
         <>
@@ -10,8 +10,8 @@ const RecordsTable = ({ records }) => {
             <div className="mt-1 h-[500px] border">
                 <table className="p-2">
                     <tr className="border-b">
-                        <th className="p-2 text-2xl w-24 border-r">类型</th>
                         <th className="p-2 text-2xl w-44 border-r">结果</th>
+                        <th className="p-2 text-2xl w-24 border-r">类型</th>
                         <th className="p-2 text-2xl w-44 border-r">结束时间</th>
                         <th className="p-2 text-2xl w-44 border-r">角色</th>
                         <th className="p-2 text-2xl w-48">结算结果</th>
@@ -22,7 +22,7 @@ const RecordsTable = ({ records }) => {
                             <td className="p-2 text-center">{record.type == 0 ? "人机对战" : "玩家对战"}</td>
                             <td className="p-2 text-center">{record.endTime}</td>
                             <td className="p-2 text-center">{record.role == 0 ? "农民" : "地主"}</td>
-                            <td className="p-2 border-l">金币:{record.coinDiff},分数:{record.rankDiff}</td>
+                            <td className="p-2 border-l">金币:{record.coinDiff > 0 ? "+" : ""}{record.coinDiff},分数:{record.rankDiff > 0 ? "+" : ""}{record.rankDiff}</td>
                         </tr>
                     ))}
                 </table>
@@ -67,21 +67,30 @@ const ProfileModal = ({ visible, userId = null, onClose, myId, onUploadAvatar })
                     coin: u.coin,
                 })
             })
+            api.getRecords(userId).then(res => {
+                const data = res.records;
+                setRecords(data.map(item => {
+                    return {
+                        id: item.id, type: item.type, endTime: dateFormat(item.create_time),
+                        role: item.role ? 1 : 0, result: item.result, coinDiff: item.coin_diff, rankDiff: item.rank_diff
+                    }
+                }))
+            })
             //0是人机，1是pvp
             //0是农民,1是地主
-            const data = [
-                { id: 1, type: 0, endTime: "2023-10-10 10:10", role: 0, result: true, coinDiff: -1, rankDiff: -1 }
-                , { id: 2, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
-                { id: 3, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
-                { id: 4, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
-                { id: 5, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
-                { id: 6, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
-                { id: 7, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -133, rankDiff: -129 },
-                { id: 8, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
-                { id: 9, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
-                { id: 10, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
-            ]
-            setRecords(data);
+            // const data = [
+            //     { id: 1, type: 0, endTime: "2023-10-10 10:10", role: 0, result: true, coinDiff: -1, rankDiff: -1 }
+            //     , { id: 2, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
+            //     { id: 3, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
+            //     { id: 4, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
+            //     { id: 5, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
+            //     { id: 6, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
+            //     { id: 7, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -133, rankDiff: -129 },
+            //     { id: 8, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
+            //     { id: 9, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
+            //     { id: 10, type: 1, endTime: "2023-10-10 10:10", role: 1, result: false, coinDiff: -1, rankDiff: -1 },
+            // ]
+            // setRecords(data);
         }
     }, [visible])
     return (

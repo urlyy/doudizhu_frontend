@@ -15,7 +15,7 @@ import Righter from './Righter';
 import SettlementTable from './SettlementTable';
 import DizhuCard from './DizhuCard';
 import Mine from './Mine';
-import ProfileModal from '../../components/ProfileModal';
+import ProfileModal from '../../components/profileModal/ProfileModal';
 
 //不能改成const，不然socketio会出问题
 function Room() {

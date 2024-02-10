@@ -35,7 +35,7 @@ const Righter = ({ curTermBeginTime, onShowProfile, data, step, emit, curPlayerI
                         } else if (step == 2) {
                             emit('ai_play_cards', { idx: data.idx })
                         }
-                    }, 1000)
+                    }, 3000)
                 }
             }
 

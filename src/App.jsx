@@ -11,7 +11,6 @@ import NotFound from './pages/notFound/Page'
 import Shop from './pages/shop/Shop'
 import AdminMain from './pages/admin/Page'
 import AdminGoods from './pages/admin/goods/Page'
-import Test from './pages/test/Page'
 // import WS from './components/WS'
 
 const App = () => {
@@ -21,7 +20,6 @@ const App = () => {
     { path: "/shop", element: <Shop></Shop> },
     { path: "/admin", element: <AdminMain></AdminMain> },
     { path: "/admin/goods", element: <AdminGoods></AdminGoods> },
-    { path: "/test", element: <Test></Test> },
     { path: '*', element: <NotFound /> },
   ])
   const { token } = userStore();

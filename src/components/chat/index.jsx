@@ -15,11 +15,11 @@ const ChatItem = ({ isMe = false, data }) => {
         <div>
             <div className={`${isMe ? "flex-row-reverse" : "flex-row"} flex items-start`}>
                 <div className="flex flex-col items-center">
-                    <img src={data.avatar} className="rounded-lg aspect-square w-20" alt="头像错误"></img>
-                    <div>{data.username}-{data.userId}</div>
-                    <div>{score2rank(data.rank)}</div>
+                    <img src={data.avatar} className="rounded-lg aspect-square lg:w-20 sm:w-10" alt="头像错误"></img>
+                    <div className="lg:text-lg sm:text-sm">{data.username}-{data.userId}</div>
+                    <div className="lg:text-lg sm:text-sm">{score2rank(data.rank)}</div>
                 </div>
-                <div className={`${isMe ? "left mr-3" : "right ml-3"} inline rounded-md bubble border border-yellow-500 p-2 break-all relative`}>{data.text}</div>
+                <div className={`${isMe ? "left mr-3" : "right ml-3"} inline rounded-md bubble border border-yellow-500 lg:p-2 lg:text-lg sm:p-1 sm:text-sm break-all relative`}>{data.text}</div>
 
                 {/* <div className={`${isMe ? "left mr-3" : "right ml-3"} bubble relative`}>
                     <span className=" rounded-md  border border-yellow-500 p-2 break-all ">{data.text}</span>
@@ -33,7 +33,7 @@ const ChatItem = ({ isMe = false, data }) => {
 const ChatButton = ({ onClick }) => {
     return (
         <div className="fixed left-0 bottom-1/4 transform -translate-y-1/2">
-            <button onClick={onClick} style={{ writingMode: "vertical-lr", userSelect: "none" }} className="text-xl bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-1 rounded">
+            <button onClick={onClick} style={{ writingMode: "vertical-lr", userSelect: "none" }} className="lg:text-xl sm:text-base  lg:py-4 lg:px-1 sm:py-2 sm:px-1 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded">
                 聊天
             </button>
         </div>
@@ -96,11 +96,11 @@ const ChatArea = ({ isOpen, onClose, onSend }) => {
         });
     }
     return (
-        <div id="drawer" className={`${isOpen ? "translate-x-0" : "-translate-x-full"} w-2/5 opacity-95 transition-transform duration-500 ease-in-out flex flex-col p-3 fixed top-0 h-full bg-white shadow-lg `}>
+        <div id="drawer" className={`${isOpen ? "translate-x-0" : "-translate-x-full"} z-50 w-2/5 opacity-95 transition-transform duration-500 ease-in-out flex flex-col lg:p-3 sm:p-1 fixed top-0 h-full bg-white shadow-lg `}>
             <div className="relative h-full flex flex-col">
                 <div>
-                    <button onClick={onClose} className="text-3xl absolute right-0">&times;</button>
-                    <div className="text-center text-3xl">聊天大厅</div>
+                    <button onClick={onClose} className="lg:text-3xl sm:text-xl absolute right-0 border sm:w-4 sm:h-4 lg:w-6 lg:h-6 flex items-center justify-center">&times;</button>
+                    <div className="text-center lg:text-3xl sm:text-lg">聊天大厅</div>
                 </div>
 
                 <div ref={scrollDivRef} className="flex flex-col gap-3 p-3 overflow-y-scroll flex-1 overflow-x-hidden max-w-300px">
@@ -112,7 +112,7 @@ const ChatArea = ({ isOpen, onClose, onSend }) => {
                 </div>
 
                 <div className="w-full flex gap-3">
-                    <input value={text} className="w-4/5" onChange={(e) => setText(e.target.value)} placeholder="输入内容"></input>
+                    <input value={text} className="w-4/5 sm:h-8 lg:h-10" onChange={(e) => setText(e.target.value)} placeholder="输入内容"></input>
                     <button onClick={handleSend} className="w-1/5 border">发送</button>
                 </div>
             </div>

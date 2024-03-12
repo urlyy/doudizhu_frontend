@@ -24,7 +24,7 @@ const SettlementTable = ({ data, isAI }) => {
                         {data.players != undefined && data.players.map((d, idx) => (
                             <tr key={idx}>
                                 <td className={itemClassName}>{d.username}{d.is_dizhu ? "(地主)" : ""}</td>
-                                <td className={itemClassName}>{d.is_withdraw ? "逃跑" : ""}</td>
+                                <td className={itemClassName}>{d.is_withdraw ? "逃跑" : "正常"}</td>
 
                                 <td className={itemClassName}>{d.new_coin}({d.coin_diff > 0 ? "+" : ""}{d.coin_diff})</td>
                                 <td className={itemClassName}>{d.new_rank}({d.rank_diff > 0 ? "+" : ""}{d.rank_diff})</td>

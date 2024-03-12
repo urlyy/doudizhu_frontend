@@ -41,7 +41,7 @@ const CountdownTimer = ({ begin, showTime = 20, onTimeout = () => { }, isActive 
     }, [isActive, begin]); //eslint-disable-line
 
     return (
-        <div style={{ aspectRatio: "1", display: show ? "inline-flex" : "none", userSelect: "none" }} className="rounded-full shadow-xl text-2xl flex justify-center items-center bg-blue-200 w-16">
+        <div style={{ aspectRatio: "1", display: show ? "inline-flex" : "none", userSelect: "none" }} className="rounded-full shadow-xl lg:text-2xl sm:text-base flex justify-center items-center bg-blue-200 sm:w-12 lg:w-16">
             <div>{timeRemaining}</div>
         </div>
     );

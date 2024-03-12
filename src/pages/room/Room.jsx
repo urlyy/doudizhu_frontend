@@ -20,8 +20,10 @@ import ProfileModal from '../../components/profileModal/ProfileModal';
 //不能改成const，不然socketio会出问题
 function Room() {
     const navigate = useNavigate();
+    const [inited, setInited] = useState(false);
     const [roomData, setRoomData] = useState({ players: [{}, {}, {}], dizhu_cards: [] });
     const { id: userId, token, username, coin, rank } = userStore();
+    const setSettlement = userStore(state => state.setSettlement)
     const myIdx = useRef(null);
     const [socket, setSocket] = useState(io(`${process.env.REACT_APP_API_BACKEND_WS_URL}/game`, { transports: ["websocket"] }));
     const [showSettlement, setShowSettlement] = useState(false);
@@ -75,6 +77,11 @@ function Room() {
             // const room_data = await api.getRoomData(roomData.id);
             // setRoomData(room_data);
             emit(myIdx.current, 'refresh');
+            settlementData.players.forEach(item => {
+                if (item.user_id == userId) {
+                    setSettlement(item.new_coin, item.new_rank)
+                }
+            })
             setShowSettlement(false);
             isReadingSettlement.current = false;
         }
@@ -86,15 +93,22 @@ function Room() {
             console.log("建立连接")
             emit(myIdx.current, 'player_enter');
         });
+
         socket.on('disconnect', () => {
 
         });
         socket.on('refresh', (data) => {
             handleRefresh(data)
+            setInited(true);
         })
         socket.on('settlement', (data) => {
             setSettlementData(data);
         })
+        setTimeout(() => {
+            if (inited == false) {
+                emit(myIdx.current, 'player_enter');
+            }
+        }, 3000)
         // 在组件卸载时解除事件监听
         return () => {
             socket.off('connect');
@@ -104,6 +118,7 @@ function Room() {
             socket.off('disconnect');
         };
     }, []);
+
 
     const handleLeave = () => {
         if (roomData.status == 0 || roomData.is_ai == 'True') {
@@ -126,7 +141,7 @@ function Room() {
             <ProfileModal myId={userId} userId={selectedProfileUserId} visible={selectedProfileUserId != null} onClose={setSelectedProfileUserId.bind(null, null)} />
             <div style={{ backgroundImage: `url(${bizhi1})`, backgroundSize: 'cover', }} className='h-screen bg-gray-200 flex flex-col overflow-hidden'>
                 <Nav to="/" beforeNavigate={handleLeave}>
-                    <div onClick={() => { copy(roomData.id); alert("房间号已复制") }}><span style={{ userSelect: "none" }}>房间号:</span>{roomData.id}</div>
+                    <div className='sm:text-base lg:text-xl' onClick={() => { copy(roomData.id); alert("房间号已复制") }}><span style={{ userSelect: "none" }}>房间号:</span>{roomData.id}</div>
                 </Nav>
                 <div className="relative flex-grow">
                     <DizhuCard data={roomData.dizhu_cards}></DizhuCard>

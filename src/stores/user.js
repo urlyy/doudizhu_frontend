@@ -37,6 +37,11 @@ const userStore = create(set => ({
     setAvatar: (avatar) => set(state => ({
         ...state,
         avatar: avatar,
+    })),
+    setSettlement: (newCoin, newRank) => set(state => ({
+        ...state,
+        coin: newCoin,
+        rank: newRank,
     }))
 }))
 

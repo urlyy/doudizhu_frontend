@@ -119,7 +119,7 @@ const Entrance = () => {
                 {/* <img src="your-logo.png" alt="Logo" className="mx-auto mb-8" style={{ width: "200px", height: "200px" }}></img> */}
                 <Button onClick={() => setIsLoginModalOpen(true)}>登录账号</Button>
                 <Button onClick={() => setIsRegisterModalOpen(true)}>注册账号</Button>
-                <Button onClick={() => { navigate("/admin") }}>管理员登录</Button>
+                {/* <Button onClick={() => { navigate("/admin") }}>管理员登录</Button> */}
                 {isLoginModalOpen && <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)}></LoginModal>}
                 {isRegisterModalOpen && <RegisterModal isOpen={isRegisterModalOpen} onClose={() => setIsRegisterModalOpen(false)}></RegisterModal>}
             </div>

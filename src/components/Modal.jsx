@@ -2,7 +2,7 @@ const Modal = ({ isOpen, children }) => {
     if (isOpen) {
         return (
             <div className="modal z-50 fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-                <div className="bg-white p-8 rounded shadow-md relative">
+                <div className="bg-white lg:p-8 sm:p-5 rounded shadow-md relative">
                     {/* Close Button */}
                     {/* <button onClick={onClose} className="absolute top-0 right-0 mt-4 mr-4 text-gray-500 hover:text-gray-700">
                         <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"

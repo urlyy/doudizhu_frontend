@@ -11,22 +11,26 @@ const RecordsTable = ({ records }) => {
             <div className="lg:text-2xl sm:text-base">最近10场记录</div>
             <div className="mt-1 lg:h-[500px] border sm:h-[200px] overflow-y-scroll">
                 <table className="lg:p-2">
-                    <tr className="border-b">
-                        <th className="sm:p-1 sm:text-sm sm:w-34 lg:p-2 lg:text-2xl lg:w-44 border-r">结果</th>
-                        <th className="sm:p-1 sm:text-sm sm:w-14 lg:p-2 lg:text-2xl lg:w-24 border-r">类型</th>
-                        <th className="sm:p-1 sm:text-sm sm:w-34 lg:p-2 lg:text-2xl lg:w-44 border-r">结束时间</th>
-                        <th className="sm:p-1 sm:text-sm sm:w-34 lg:p-2 lg:text-2xl lg:w-44 border-r">角色</th>
-                        <th className="sm:p-1 sm:text-sm sm:w-38 lg:p-2 lg:text-2xl lg:w-48">结算结果</th>
-                    </tr>
-                    {records.filter((_, idx) => true).map(record => (
-                        <tr key={record.id} className="w-full border-b">
-                            <td className={`lg:p-2 sm:text-sm lg:text-xl text-center ${record.result == true ? "text-green-500" : 'text-red-500'}`}>{record.result == true ? "获胜" : "失败"}</td>
-                            <td className="lg:p-2 sm:text-sm lg:text-lg text-center border-l">{record.type == 0 ? "人机对战" : "玩家对战"}</td>
-                            <td className="lg:p-2 sm:text-sm lg:text-xl text-center border-l">{record.endTime}</td>
-                            <td className="lg:p-2 sm:text-sm lg:text-xl text-center border-l">{record.role == 0 ? "农民" : "地主"}</td>
-                            <td className="lg:p-2 sm:text-sm lg:text-xl border-l">金币:{record.coinDiff > 0 ? "+" : ""}{record.coinDiff},分数:{record.rankDiff > 0 ? "+" : ""}{record.rankDiff}</td>
+                    <thead>
+                        <tr className="border-b">
+                            <th className="sm:p-1 sm:text-sm sm:w-34 lg:p-2 lg:text-2xl lg:w-44 border-r">结果</th>
+                            <th className="sm:p-1 sm:text-sm sm:w-14 lg:p-2 lg:text-2xl lg:w-24 border-r">类型</th>
+                            <th className="sm:p-1 sm:text-sm sm:w-34 lg:p-2 lg:text-2xl lg:w-44 border-r">结束时间</th>
+                            <th className="sm:p-1 sm:text-sm sm:w-34 lg:p-2 lg:text-2xl lg:w-44 border-r">角色</th>
+                            <th className="sm:p-1 sm:text-sm sm:w-38 lg:p-2 lg:text-2xl lg:w-48">结算结果</th>
                         </tr>
-                    ))}
+                    </thead>
+                    <tbody>
+                        {records.filter((_, idx) => true).map(record => (
+                            <tr key={record.id} className="w-full border-b">
+                                <td className={`lg:p-2 sm:text-sm lg:text-xl text-center ${record.result == true ? "text-green-500" : 'text-red-500'}`}>{record.result == true ? "获胜" : "失败"}</td>
+                                <td className="lg:p-2 sm:text-sm lg:text-lg text-center border-l">{record.type == 0 ? "人机对战" : "玩家对战"}</td>
+                                <td className="lg:p-2 sm:text-sm lg:text-xl text-center border-l">{record.endTime}</td>
+                                <td className="lg:p-2 sm:text-sm lg:text-xl text-center border-l">{record.role == 0 ? "农民" : "地主"}</td>
+                                <td className="lg:p-2 sm:text-sm lg:text-xl border-l">金币:{record.coinDiff > 0 ? "+" : ""}{record.coinDiff},分数:{record.rankDiff > 0 ? "+" : ""}{record.rankDiff}</td>
+                            </tr>
+                        ))}
+                    </tbody>
                 </table>
             </div>
         </>

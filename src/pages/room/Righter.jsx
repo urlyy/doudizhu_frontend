@@ -8,7 +8,7 @@ import score2rank from '../../utils/rankScore2title'
 import cardHelper from '../../utils/cardHelper'
 
 //右边这个人的 
-const Righter = ({ curTermBeginTime, onShowProfile, data, step, emit, curPlayerIdx, lastCards, lastCardsPlayerIdx, countdownActive }) => {
+const Righter = ({ passPlayers, curTermBeginTime, onShowProfile, data, step, emit, curPlayerIdx, lastCards, lastCardsPlayerIdx, countdownActive }) => {
     const [righter, setRighter] = useState({})
     useEffect(() => {
         if (data.is_ai == true) {
@@ -51,35 +51,44 @@ const Righter = ({ curTermBeginTime, onShowProfile, data, step, emit, curPlayerI
                         {step == 0 && <div style={{ writingMode: "vertical-lr" }} className={`${data.is_ready ? 'bg-green-300' : 'bg-red-300'} z-50 sm:text-sm lg:text-2xl  rounded-md p-2`}>
                             {data.is_ready ? '已准备' : '未准备'}
                         </div>}
-                        {step == 2 && (lastCardsPlayerIdx == data.idx) &&
-                            <div className='flex items-center w-40 h-52 justify-end'>
-                                <div className='flex'>
-                                    {lastCards.map((card, index) => {
-                                        const width = window.innerWidth;
-                                        let isMobile = false;
-                                        let tmpH;
-                                        if (width >= 640) {
-                                            //小屏幕布局
-                                            isMobile = true;
-                                            tmpH = "70px"
-                                        }
-                                        if (width >= 1024) {
-                                            isMobile = false;
-                                            tmpH = "120px"
-                                        }
-                                        const translateParam = isMobile ? 30 : 55;
-                                        const style = {
-                                            height: tmpH,
-                                            zIndex: index,
-                                            transform: `translateX(-${index * translateParam}px)`,
-                                        }
-                                        return (
-                                            <GameCard isMobile={isMobile} key={index} enable={false} style={style} suit={card.suit} number={card.number}></GameCard>
-                                        )
-                                    })}
-                                </div>
-                            </div>
-                        }
+                        {step == 2 && (
+                            <>
+                                {passPlayers.includes(data.idx) && (
+                                    <div className="flex items-center text-xl bg-red-500 p-1 text-white rounded-md">
+                                        不要
+                                    </div>
+                                )}
+                                {lastCardsPlayerIdx == data.idx &&
+                                    <div className='flex items-center w-40 h-52 justify-end'>
+                                        <div className='flex'>
+                                            {lastCards.map((card, index) => {
+                                                const width = window.innerWidth;
+                                                let isMobile = false;
+                                                let tmpH;
+                                                if (width >= 640) {
+                                                    //小屏幕布局
+                                                    isMobile = true;
+                                                    tmpH = "70px"
+                                                }
+                                                if (width >= 1024) {
+                                                    isMobile = false;
+                                                    tmpH = "120px"
+                                                }
+                                                const translateParam = isMobile ? 30 : 55;
+                                                const style = {
+                                                    height: tmpH,
+                                                    zIndex: index,
+                                                    transform: `translateX(-${index * translateParam}px)`,
+                                                }
+                                                return (
+                                                    <GameCard isMobile={isMobile} key={index} enable={false} style={style} suit={card.suit} number={card.number}></GameCard>
+                                                )
+                                            })}
+                                        </div>
+                                    </div>
+                                }
+                            </>
+                        )}
                     </div>
                     <div className='text-2xl flex flex-col items-center' style={{ userSelect: "none" }}>
                         <img src={data.is_dizhu ? dizhu : nongming} className='absolute lg:static lg:h-48 lg:w-40 sm:w-20 sm:h-24'></img>

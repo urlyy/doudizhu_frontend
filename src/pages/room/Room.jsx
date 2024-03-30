@@ -108,7 +108,7 @@ function Room() {
             if (inited == false) {
                 emit(myIdx.current, 'player_enter');
             }
-        }, 3000)
+        }, 2000)
         // 在组件卸载时解除事件监听
         return () => {
             socket.off('connect');
@@ -147,13 +147,13 @@ function Room() {
                     <DizhuCard data={roomData.dizhu_cards}></DizhuCard>
                     <div className='flex'>
                         <div className='flex-1'>
-                            {Object.keys(leftData()).length > 0 && <Lefter curTermBeginTime={roomData.cur_term_begin_time} onShowProfile={(userId) => { setSelectedProfileUserId(userId) }} emit={emit.bind(null, (myIdx.current + 1) % 3)} countdownActive={!showSettlement} lastCardsPlayerIdx={roomData.last_cards_player_idx} lastCards={roomData.last_cards} curPlayerIdx={roomData.cur_player_idx} step={roomData.status} data={leftData()}></Lefter>}
+                            {Object.keys(leftData()).length > 0 && <Lefter passPlayers={roomData.pass_players} curTermBeginTime={roomData.cur_term_begin_time} onShowProfile={(userId) => { setSelectedProfileUserId(userId) }} emit={emit.bind(null, (myIdx.current + 1) % 3)} countdownActive={!showSettlement} lastCardsPlayerIdx={roomData.last_cards_player_idx} lastCards={roomData.last_cards} curPlayerIdx={roomData.cur_player_idx} step={roomData.status} data={leftData()}></Lefter>}
                         </div>
                         <div className='flex-1'>
-                            {Object.keys(rightData()).length > 0 && <Righter curTermBeginTime={roomData.cur_term_begin_time} onShowProfile={(userId) => { setSelectedProfileUserId(userId) }} emit={emit.bind(null, (myIdx.current + 2) % 3)} countdownActive={!showSettlement} lastCardsPlayerIdx={roomData.last_cards_player_idx} lastCards={roomData.last_cards} curPlayerIdx={roomData.cur_player_idx} step={roomData.status} data={rightData()}></Righter>}
+                            {Object.keys(rightData()).length > 0 && <Righter passPlayers={roomData.pass_players} curTermBeginTime={roomData.cur_term_begin_time} onShowProfile={(userId) => { setSelectedProfileUserId(userId) }} emit={emit.bind(null, (myIdx.current + 2) % 3)} countdownActive={!showSettlement} lastCardsPlayerIdx={roomData.last_cards_player_idx} lastCards={roomData.last_cards} curPlayerIdx={roomData.cur_player_idx} step={roomData.status} data={rightData()}></Righter>}
                         </div>
                     </div>
-                    <Mine curTermBeginTime={roomData.cur_term_begin_time} onShowProfile={(userId) => { setSelectedProfileUserId(userId) }} countdownActive={!showSettlement} lastCardsPlayerIdx={roomData.last_cards_player_idx} lastCards={roomData.last_cards} curPlayerIdx={roomData.cur_player_idx} emit={emit.bind(null, myIdx.current)} step={roomData.status} data={roomData.players[myIdx.current]}></Mine>
+                    <Mine passPlayers={roomData.pass_players} curTermBeginTime={roomData.cur_term_begin_time} onShowProfile={(userId) => { setSelectedProfileUserId(userId) }} countdownActive={!showSettlement} lastCardsPlayerIdx={roomData.last_cards_player_idx} lastCards={roomData.last_cards} curPlayerIdx={roomData.cur_player_idx} emit={emit.bind(null, myIdx.current)} step={roomData.status} data={roomData.players[myIdx.current]}></Mine>
                 </div>
             </div>
         </>

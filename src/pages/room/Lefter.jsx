@@ -8,7 +8,7 @@ import score2rank from '../../utils/rankScore2title'
 import cardHelper from '../../utils/cardHelper'
 
 //左边这个人的
-const Lefter = ({ curTermBeginTime, onShowProfile, data, step, emit, curPlayerIdx, lastCardsPlayerIdx, lastCards, countdownActive }) => {
+const Lefter = ({ passPlayers, curTermBeginTime, onShowProfile, data, step, emit, curPlayerIdx, lastCardsPlayerIdx, lastCards, countdownActive }) => {
     const [lefter, setLefter] = useState({});
     useEffect(() => {
         if (data.is_ai == true) {
@@ -70,38 +70,47 @@ const Lefter = ({ curTermBeginTime, onShowProfile, data, step, emit, curPlayerId
                             {data.is_ready ? '已准备' : '未准备'}
                         </div>
                     }
-                    {step == 2 && (lastCardsPlayerIdx == data.idx) &&
-                        <div className='flex items-center w-40 h-52 ml-3'>
-                            <div className='flex'>
-                                {lastCards.map((card, index) => {
-                                    const width = window.innerWidth;
-                                    let isMobile = false;
-                                    let tmpH;
-                                    if (width >= 640) {
-                                        //小屏幕布局
-                                        isMobile = true;
-                                        tmpH = "70px"
-                                    }
-                                    if (width >= 1024) {
-                                        isMobile = false;
-                                        tmpH = "120px"
-                                    }
-                                    const translateParam = isMobile ? 25 : 60;
-                                    const style = {
-                                        height: tmpH,
-                                        zIndex: index,
-                                        transform: `translateX(-${index * translateParam}px)`,
-                                    }
 
-                                    return (
-                                        <GameCard isMobile={isMobile} key={index} enable={false} style={style} suit={card.suit} number={card.number}></GameCard>
-                                    )
-                                })}
-                            </div>
-                        </div>}
+                    {step == 2 && (
+                        <>
+                            {passPlayers.includes(data.idx) && (
+                                <div className="flex items-center bg-red-500 p-1 text-white rounded-md ml-5 text-xl">
+                                    不要
+                                </div>
+                            )}
+                            {lastCardsPlayerIdx == data.idx &&
+                                <div className='flex items-center w-40 h-52 ml-3'>
+                                    <div className='flex'>
+                                        {lastCards.map((card, index) => {
+                                            const width = window.innerWidth;
+                                            let isMobile = false;
+                                            let tmpH;
+                                            if (width >= 640) {
+                                                //小屏幕布局
+                                                isMobile = true;
+                                                tmpH = "70px"
+                                            }
+                                            if (width >= 1024) {
+                                                isMobile = false;
+                                                tmpH = "120px"
+                                            }
+                                            const translateParam = isMobile ? 25 : 60;
+                                            const style = {
+                                                height: tmpH,
+                                                zIndex: index,
+                                                transform: `translateX(-${index * translateParam}px)`,
+                                            }
 
+                                            return (
+                                                <GameCard isMobile={isMobile} key={index} enable={false} style={style} suit={card.suit} number={card.number}></GameCard>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                            }
+                        </>
+                    )}
                 </div>
-
             </div>
         </div>
     )

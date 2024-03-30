@@ -122,7 +122,7 @@ class 火箭 extends Type {
         if (cards.length != 2) {
             return false;
         }
-        for (let i = 0; i < cards.length; i++) {
+        for (let i = 0; i < 2; i++) {
             const card = cards[i];
             if (card.number != 'X' && card.number != 'D') {
                 return false;
@@ -478,19 +478,36 @@ const isBiggerThan = (cardsA, cardsB) => {
     }
 }
 
-const findBiggerCards = (cardsA, cardsB) => {
+
+const findBiggerCards = (cards, cardsB) => {
+    let cardsA = cards.slice().reverse();
     const typeB = getType(cardsB);
-    for (let i = cardsA.length - 1; i >= 0; i--) {
-        for (let j = cardsA.length - 1; j >= i; j--) {
-            //左闭右开
-            const subCards = cardsA.slice(i, j + 1);
+    let tmp = [[]];
+    let indexes = [];
+    for (let i = 0; i < cardsA.length; i++) {
+        indexes.push(i);
+    }
+    for (let num of indexes) {
+        let temp = [];
+        for (let subset of tmp) {
+            let newSubset = [...subset, num];
+            const subCards = [];
+            for (let i of newSubset) {
+                subCards.push(cardsA[i]);
+            }
             const typeSubA = getType(subCards);
             if (typeSubA != null && typeSubA == typeB && typeSubA.sameType(subCards, cardsB)) {
                 if (isBiggerThan(subCards, cardsB)) {
-                    return [i, j]
+                    const res = []
+                    for (let i of newSubset) {
+                        res.unshift(cardsA.length - 1 - i);
+                    }
+                    return res;
                 }
             }
+            temp.push(newSubset);
         }
+        tmp = tmp.concat(temp);
     }
     return null;
 }
@@ -502,27 +519,29 @@ const generateCards = (data) => {
     })
 }
 
-const cards = generateCards(['X', 'D'])
-const cards1 = generateCards(['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A', '2']);
-const cards11 = generateCards(['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']);
-const cards2 = generateCards(['3', '3', '4', '4', '5', '5', '6', '6']);
-const cards3 = generateCards(['7', '7', '7', '8', '8', '8']);
-const cards31 = generateCards(['8', '8', '8', '9', '9', '9']);
-const cards32 = generateCards(['7', '7', '7', '8', '8']);
-const cards4 = generateCards(['J', 'J', 'J', 'J', 'Q', 'Q']);
-const cards5 = generateCards(['X', 'D', '2']);
-const cards6 = generateCards(['2', '2', '2', 'Q', 'Q']);
+// const cards = generateCards(['X', 'D'])
+// const cards1 = generateCards(['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A', '2']);
+// const cards11 = generateCards(['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']);
+// const cards2 = generateCards(['3', '3', '4', '4', '5', '5', '6', '6']);
+// const cards3 = generateCards(['7', '7', '7', '8', '8', '8']);
+// const cards31 = generateCards(['8', '8', '8', '9', '9', '9']);
+// const cards32 = generateCards(['7', '7', '7', '8', '8']);
+// const cards4 = generateCards(['J', 'J', 'J', 'Q', 'Q']);
+// const cards5 = generateCards(['X', 'D', '2']);
+// const cards6 = generateCards(['2', '2', '2', 'A', 'K', 'Q', 'Q', '7', '5', '3']);
 
-const cards7 = generateCards(['3', '4', '5', '6', '7']);
+// const cards7 = generateCards(['3', '4', '5', '6', '7']);
 
 
-// const res = findBiggerCards(cards31, cards32);
-// console.log(res);
-// console.log(getType(cards32))
 const cardHelper = {
     isBiggerThan: isBiggerThan,
     getType: getType,
     findBiggerCards: findBiggerCards
 }
+
+// const cards8 = generateCards(['2', 'K', 'K', 'Q', 'Q', 'J', 'J', '10', '10', '9', '9', '8', '8', '6', '6', '5']);
+// const cards9 = generateCards(['8']);
+// const res = cardHelper.findBiggerCards(cards8, cards9)
+
 
 export default cardHelper

@@ -12,7 +12,6 @@ const CountdownTimer = ({ begin, showTime = 20, onTimeout = () => { }, isActive 
             const now = new Date().getTime();
             const beginTime = parseInt(begin);
             const remain = Math.ceil((beginTime + 20 * 1000 - now) / 1000);
-            console.log(remain);
             //开始的20秒后与当前的距离
             setTimeRemaining(remain)
             if (isActive) {

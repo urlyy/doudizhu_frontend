@@ -10,8 +10,7 @@ import cardHelper from '../../utils/cardHelper'
 
 
 //我这块区域
-const Mine = ({ curTermBeginTime, onShowProfile, data, step, emit, lastCardsPlayerIdx, lastCards, curPlayerIdx, countdownActive }) => {
-    // const { id: userId } = userStore();
+const Mine = ({ passPlayers, curTermBeginTime, onShowProfile, data, step, emit, lastCardsPlayerIdx, lastCards, curPlayerIdx, countdownActive }) => {
     const [selectedCardIdxs, setSelectedCardIdxs] = useState([]);
     const [hint, setHint] = useState(null);
     const [tuoguan, setTuoguan] = useState(null);
@@ -19,21 +18,27 @@ const Mine = ({ curTermBeginTime, onShowProfile, data, step, emit, lastCardsPlay
     useEffect(() => {
         if (data && data.user_id) {
             api.getUserProfile(data.user_id).then(data => {
-                setMe(data.user)
+                setMe(data.user);
             })
         }
     }, [data])
+    const getHint = () => {
+        if (lastCards.length != 0) {
+            const res = cardHelper.findBiggerCards(data.cards, lastCards);
+            return res;
+        } else {
+            if (data.cards.length > 0) {
+                const idx = data.cards.length - 1;
+                return [idx];
+            }
+            return null;
+        }
+    }
     useEffect(() => {
         if (data != undefined) {
             setTuoguan(data.is_tuoguan);
             if (curPlayerIdx == data.idx) {
-                if (lastCards.length != 0) {
-                    const res = cardHelper.findBiggerCards(data.cards, lastCards);
-                    setHint(res);
-
-                } else {
-                    setHint(null);
-                }
+                setHint(getHint());
             }
         }
     }, [curPlayerIdx])
@@ -54,15 +59,15 @@ const Mine = ({ curTermBeginTime, onShowProfile, data, step, emit, lastCardsPlay
     const ready_cancel = () => {
         emit('player_ready_cancel');
     }
-    const handlePlayCards = () => {
-        if (selectedCardIdxs.length == 0) {
+    const handlePlayCards = (selected) => {
+        if (selected.length == 0) {
             alert("请选择牌");
             return;
         }
-        const cards = selectedCardIdxs.sort((a, b) => a - b).map(idx => data.cards[idx]);
+        const cards = selected.sort((a, b) => a - b).map(idx => data.cards[idx]);
         const type = cardHelper.getType(cards);
         if (type != null) {
-            if (lastCards.length == 0 || (type.sameType(cards, lastCards) && cardHelper.isBiggerThan(cards, lastCards))) {
+            if (lastCards.length == 0 || cardHelper.isBiggerThan(cards, lastCards)) {
                 emit('play_cards', { cards });
                 setSelectedCardIdxs([]);
             } else {
@@ -75,11 +80,16 @@ const Mine = ({ curTermBeginTime, onShowProfile, data, step, emit, lastCardsPlay
     const handlePass = () => {
         emit('pass')
     }
-    const handleTimeout = () => {
-        if (step == 1) {
+    const handleTimeout = (ste) => {
+        if (ste == 1) {
             emit('bid', { score: 0 });
-        } else if (step == 2) {
-            emit('pass')
+        } else if (ste == 2) {
+            const selected = getHint();
+            if (selected) {
+                handlePlayCards(selected);
+            } else {
+                emit('pass')
+            }
         }
     }
     const handleBid = (score) => {
@@ -143,21 +153,20 @@ const Mine = ({ curTermBeginTime, onShowProfile, data, step, emit, lastCardsPlay
         )
     }
     const handleHint = () => {
-        const hintIdxs = []
         if (hint != null) {
-            const [begin, end] = hint;
-            for (let i = begin; i <= end; i++) {
-                hintIdxs.push(i);
-            }
+            setSelectedCardIdxs([...hint]);
+        } else {
+            setSelectedCardIdxs([]);
         }
-        setSelectedCardIdxs(hintIdxs);
+
     }
     const handleTuoguan = () => {
-        console.log("托管");
         const newStatus = !tuoguan;
         setTuoguan(newStatus);
         emit("set_tuoguan", { is_tuoguan: newStatus, step: step });
     }
+
+    console.log(selectedCardIdxs)
     return (
         <>
             {(lastCardsPlayerIdx == data.idx) && drawLastCards(lastCards)}
@@ -175,7 +184,11 @@ const Mine = ({ curTermBeginTime, onShowProfile, data, step, emit, lastCardsPlay
                         </div>
                     </div>
                 </div>
+                <div className="flex justify-center">
+                    {passPlayers.includes(data.idx) && <div className="bg-red-500 text-white text-center text-xl p-2 rounded-md">不要</div>}
+                </div>
                 <div className=' flex justify-center mb-2 gap-2 items-center ' style={{ userSelect: "none" }}>
+
                     <div className="flex gap-2 ">
                         {/* {step != 0 && tuoguan == true && <div className="lg:text-2xl sm:text-base lg:p-3 sm:p-2 bg-white rounded-md">托管中...</div>} */}
                         {step == 1 && data.bid_score != -1 && <div className="lg:text-2xl sm:text-base lg:p-3 sm:p-2 bg-white p-1">{data.bid_score == 0 ? "不叫" : `叫${data.bid_score}分`}</div>}
@@ -187,8 +200,8 @@ const Mine = ({ curTermBeginTime, onShowProfile, data, step, emit, lastCardsPlay
                                 <button onClick={ready_cancel} style={{ display: data.is_ready ? 'block' : 'none' }} className='border border-black bg-green-300 lg:text-2xl sm:text-base lg:p-3 sm:p-2 rounded-lg'>取消准备</button>
                             </>
                         )}
-                        {(step != 0 && curPlayerIdx == data.idx) && <Countdown begin={curTermBeginTime} onTimeout={handleTimeout} isActive={countdownActive}></Countdown>}
-
+                        {(step == 1 && curPlayerIdx == data.idx) && <Countdown begin={curTermBeginTime} onTimeout={() => { handleTimeout(1) }} isActive={countdownActive}></Countdown>}
+                        {(step == 2 && curPlayerIdx == data.idx) && <Countdown begin={curTermBeginTime} onTimeout={() => { handleTimeout(2) }} isActive={countdownActive}></Countdown>}
                         {step != 0 && <button onClick={() => { handleTuoguan() }} className=' border border-blue bg-blue-100 lg:text-2xl sm:text-base lg:p-3 sm:p-2 rounded-lg'>
                             {tuoguan == true ? "取消托管" : "托管"}
                         </button>}
@@ -210,7 +223,7 @@ const Mine = ({ curTermBeginTime, onShowProfile, data, step, emit, lastCardsPlay
                                     {curPlayerIdx == data.idx && (
                                         <div className='flex items-center'>
                                             <button style={{ visibility: selectedCardIdxs.length == 0 ? 'visible' : 'hidden' }} onClick={handlePass} className='border border-black bg-red-200 hover:bg-red-400 lg:text-2xl sm:text-base lg:p-3 sm:p-2 rounded-lg'>过</button>
-                                            <button style={{ display: (hint != null || lastCards.length == 0) && selectedCardIdxs.length > 0 ? 'block' : 'none' }} onClick={handlePlayCards} className='border border-black bg-green-200 hover:bg-green-400 lg:text-2xl sm:text-base lg:p-3 sm:p-2 rounded-lg'>出牌</button>
+                                            <button style={{ display: (hint != null || lastCards.length == 0) && selectedCardIdxs.length > 0 ? 'block' : 'none' }} onClick={handlePlayCards.bind(null, selectedCardIdxs)} className='border border-black bg-green-200 hover:bg-green-400 lg:text-2xl sm:text-base lg:p-3 sm:p-2 rounded-lg'>出牌</button>
                                             <button style={{ display: hint != null ? 'block' : 'none' }} onClick={handleHint} className='border border-black bg-blue-200 hover:bg-blue-400 lg:text-2xl sm:text-base lg:p-3 sm:p-2 rounded-lg'>提示</button>
                                             <div style={{ display: hint == null && lastCards.length > 0 ? 'block' : 'none' }} className='border border-black bg-slate-400 lg:text-2xl sm:text-base lg:p-3 sm:p-2 rounded-lg'>无牌可打</div>
                                         </div>

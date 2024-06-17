@@ -475,10 +475,11 @@ const isBiggerThan = (cardsA, cardsB) => {
         if (typeB == 炸弹type) {
             return false;
         }
+        return false;
     }
 }
 
-
+// A牌里找比B大的
 const findBiggerCards = (cards, cardsB) => {
     let cardsA = cards.slice().reverse();
     const typeB = getType(cardsB);
@@ -496,7 +497,7 @@ const findBiggerCards = (cards, cardsB) => {
                 subCards.push(cardsA[i]);
             }
             const typeSubA = getType(subCards);
-            if (typeSubA != null && typeSubA == typeB && typeSubA.sameType(subCards, cardsB)) {
+            if (typeSubA != null) {
                 if (isBiggerThan(subCards, cardsB)) {
                     const res = []
                     for (let i of newSubset) {
@@ -530,7 +531,6 @@ const generateCards = (data) => {
 // const cards5 = generateCards(['X', 'D', '2']);
 // const cards6 = generateCards(['2', '2', '2', 'A', 'K', 'Q', 'Q', '7', '5', '3']);
 
-// const cards7 = generateCards(['3', '4', '5', '6', '7']);
 
 
 const cardHelper = {
@@ -539,9 +539,12 @@ const cardHelper = {
     findBiggerCards: findBiggerCards
 }
 
+const cards7 = generateCards(['D']);
+const cards8 = generateCards(['4', '4', '4', '4', '5']);
+
 // const cards8 = generateCards(['2', 'K', 'K', 'Q', 'Q', 'J', 'J', '10', '10', '9', '9', '8', '8', '6', '6', '5']);
 // const cards9 = generateCards(['8']);
-// const res = cardHelper.findBiggerCards(cards8, cards9)
+const res = cardHelper.findBiggerCards(cards8, cards7);
+console.log(res);
 
-
-export default cardHelper
+// export default cardHelper
